@@ -4,13 +4,17 @@
 <head>
   <title>Blue Box</title>
   <link href='./style.css'  rel='stylesheet'>
+  <link href='./card.css'  rel='stylesheet'>
+  <link href='./carousel.css'  rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
-  <header style="display:block">
+  <header>
     <div>
       <img src="./Logo.png" id="logo">
+      <br>
+      <br>
       <h1>Blue Box</h1>
     </div>
   </header>
@@ -26,12 +30,68 @@
     </form>
   </div>
 
-  <div id='name-list'>
-    <table align='center'>
+  <div>
+    <table align='center' id='name-list'>
       <tr>
         <th>Users</th>
+        <th>Points</th>
       </tr>
     </table>
+  </div>
+
+  <div class="container" id='bluespace'>
+    <div class="card" id='bluecard' align='center'>
+      <h3 class="title">Blue Card</h3>
+      <div class="bar">
+        <div class='txt'>Sample card description</div>
+        <div class="emptybar"></div>
+        <div class="filledbar"></div>
+      </div>
+      <!--
+      <div class="circle">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <circle class="stroke" cx="60" cy="60" r="50"/>
+        </svg>
+      </div>
+      -->
+    </div>
+  </div>
+
+  <div class="container" id='userspace'>
+    <div class="card" align='center' style="background-color:white; color: black">
+      <h3 class="title" style="color: black">User Card</h3>
+      <div class="bar">
+        <div class='txt'>Sample card description</div>
+      </div>
+    </div>
+    <style>
+    </style>
+  </div>
+
+  <div class="slider" align='center'>
+    <a href="#slide-1">1</a>
+    <a href="#slide-2">2</a>
+    <a href="#slide-3">3</a>
+    <a href="#slide-4">4</a>
+    <a href="#slide-5">5</a>
+
+    <div class="slides">
+      <div id="slide-1">
+        1
+      </div>
+      <div id="slide-2">
+        2
+      </div>
+      <div id="slide-3">
+        3
+      </div>
+      <div id="slide-4">
+        4
+      </div>
+      <div id="slide-5">
+        5
+      </div>
+    </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"> </script>

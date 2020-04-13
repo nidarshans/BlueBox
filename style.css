@@ -5,10 +5,18 @@ h1 {
   font-size: 100;
   color: #00E4FF;
   text-align: left;
-  padding: 10%;
+  margin-top: 100;
 }
 
-p, th, td, tr, form {
+header {
+  display: inline;
+}
+
+label {
+  text-align: center;
+}
+
+body {
   font-family: 'Raleway', sans-serif;
   color: white;
 }
@@ -21,6 +29,8 @@ body {
   width: 30%;
   height: auto;
   float: left;
+  margin-bottom: 100;
+  padding: 100;
 }
 
 canvas {
@@ -31,11 +41,14 @@ canvas {
   color: black;
 }
 
-table {
-  border: 5px solid white;
+table, th, td {
+  border: 3px solid white;
+  border-collapse: collapse;
+  padding: 50;
 }
 
 button {
+  margin-top: 5%;
   background-color: black; /* Green */
   border: none;
   color: white;
