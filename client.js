@@ -13,10 +13,16 @@ socket.on('register', (playerData)=> {
 });
 
 socket.on('set click to enter', ()=> {
-  $('#enter').html('Click to start game');
-  $('#enter').click((event)=>{
+  $('#enter').replaceWith('<button id="clicktoenter">...</button>');
+  $('#clicktoenter').html('Click to start game');
+  $('#clicktoenter').click((event)=>{
     $('.card').show();
     $('.slider').show();
+    socket.emit('entered2', socket.id);
     event.preventDefault();
   });
+});
+
+socket.on('start', (bluecards, whitecards)=>{
+
 });

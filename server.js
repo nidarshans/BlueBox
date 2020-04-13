@@ -5,11 +5,13 @@ var io = require('socket.io')(http);
 var path = require('path');
 var current_players = 0;
 var helper = require('./helper.js');
+var decks = require('./decks.js');
 
 const ROOM = '1';
-const PLAYER_LIMIT = 1;
+const PLAYER_LIMIT = 2;
 var players = [];
-
+var bluecards = decks.dvdeck.blue;
+var whitecards = decks.dvdeck.white;
 
 
 app.use(express.static(__dirname));
@@ -26,6 +28,7 @@ io.on('connect', onConnect);
 
 function onConnect (socket) {
   console.log(socket.id + ' connected');
+  console.log(JSON.stringify(decks.dvdeck));
   helper.test();
 
   socket.on('entered', function(name) {
@@ -40,7 +43,16 @@ function onConnect (socket) {
         io.in(ROOM).emit('set click to enter');
       }
     }
-    else {}
+    else {socket.disconnect();}
+  });
+
+  socket.on('entered2', (id)=>{
+    players[helper.checkArrayLoc(id, players)].enteredGame = true;
+    if(helper.checkEnteredGame(players) == PLAYER_LIMIT) {
+      bluecards = helper.shuffle(bluecards);
+      whitecards = helper.shuffle(whitecards);
+      io.in(ROOM).emit('start', bluecards, whitecards);
+    }
   });
 
 
