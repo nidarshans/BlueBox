@@ -19,9 +19,6 @@ label {
 body {
   font-family: 'Raleway', sans-serif;
   color: white;
-}
-
-body {
   background: #0F0F0F;
 }
 
@@ -42,9 +39,10 @@ canvas {
 }
 
 table, th, td {
+  margin-top: 5%;
   border: 3px solid white;
   border-collapse: collapse;
-  padding: 50;
+  padding: 10%;
 }
 
 button {
@@ -63,4 +61,12 @@ button {
 button:hover {
   background-color: #00E4FF; /* Green */
   color: white;
+}
+
+input {
+  padding: 10px;
+  font-family: 'Raleway', sans-serif;
+  color: black;
+  background-color: white;
+  text-align: center;
 }

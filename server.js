@@ -9,9 +9,14 @@ var decks = require('./decks.js');
 
 const ROOM = '1';
 const PLAYER_LIMIT = 2;
+const MAX_POINTS = 5;
+const CARDS_IN_HAND = 5;
 var players = [];
 var bluecards = decks.dvdeck.blue;
 var whitecards = decks.dvdeck.white;
+var whitefill = [];
+var bluecount = 0;
+var whitecount = 0;
 
 
 app.use(express.static(__dirname));
@@ -27,12 +32,14 @@ http.listen(3000, function(){
 io.on('connect', onConnect);
 
 function onConnect (socket) {
+  app.get('/', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+  });
   console.log(socket.id + ' connected');
-  console.log(JSON.stringify(decks.dvdeck));
   helper.test();
 
   socket.on('entered', function(name) {
-    if(current_players <= PLAYER_LIMIT) {
+    if(current_players <= PLAYER_LIMIT && helper.checkDuplicate(players, name, socket.id) != true) {
       players.push(new helper.Player(socket.join(ROOM).id, name));
       console.log(name + ' entered the game');
       io.emit('register', players[current_players]);
@@ -49,10 +56,27 @@ function onConnect (socket) {
   socket.on('entered2', (id)=>{
     players[helper.checkArrayLoc(id, players)].enteredGame = true;
     if(helper.checkEnteredGame(players) == PLAYER_LIMIT) {
+      console.log("Shuffling ...");
       bluecards = helper.shuffle(bluecards);
       whitecards = helper.shuffle(whitecards);
-      io.in(ROOM).emit('start', bluecards, whitecards);
+      console.log("Shuffled!")
+      console.log(bluecards);
+      console.log(whitecards);
+      io.in(ROOM).emit('initialize', bluecards[bluecount]);
+      bluecount++;
+      console.log('Played blue card')
     }
+  });
+
+  socket.on('initialized', ()=> {
+    console.log('Handing out white cards')
+    for(var x  = 0; x < players.length - 1; x++) {
+      for(var y = 0; y < CARDS_IN_HAND; y++) whitefill.push(whitecards[whitecount++]);
+      console.log(whitefill);
+      io.to(`${players[x].id}`).emit('fillWhite', whitefill);
+      whitefill = [];
+    }
+    console.log('Finished handing out white cards');
   });
 
 

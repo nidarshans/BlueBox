@@ -23,6 +23,11 @@ socket.on('set click to enter', ()=> {
   });
 });
 
-socket.on('start', (bluecards, whitecards)=>{
+socket.on('initialize', (blue)=>{
+  $('#bluecard').html(blue);
+  socket.emit('initialized');
+});
 
+socket.on('fillWhite', (cards)=> {
+  for(var x = 1; x <= 5; x++) $('#slide-' + x).html(cards[x-1]);
 });

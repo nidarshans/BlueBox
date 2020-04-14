@@ -9,10 +9,10 @@ class Player {
   }
 }
 
-function checkDuplicate(array, name) {
+function checkDuplicate(array, name, id) {
   if(array == null) return false;
   for(var n of array) {
-    if(n.name == name) return true;
+    if(n.name == name || n.id == id) return true;
   }
   return false;
 }
@@ -32,7 +32,21 @@ function checkEnteredGame(array) {
 }
 
 function shuffle(deck) {
-  
+  for (var i = deck.length - 1; i > 0; i--) {
+    const swapIndex = Math.floor(Math.random() * (i + 1))
+    const currentCard = deck[i]
+    const cardToSwap = deck[swapIndex]
+    deck[i] = cardToSwap
+    deck[swapIndex] = currentCard
+  }
+  return deck
+}
+
+function checkWin(array, max) {
+  for(var p of array) {
+    if(p.points == max) return true;
+  }
+  return false;
 }
 
 
@@ -43,3 +57,4 @@ exports.checkDuplicate = checkDuplicate;
 exports.checkArrayLoc = checkArrayLoc;
 exports.checkEnteredGame = checkEnteredGame;
 exports.shuffle = shuffle;
+exports.checkWin = checkWin;
