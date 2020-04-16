@@ -6,6 +6,14 @@ class Player {
     this.name = username;
     this.points = 0;
     this.enteredGame = false;
+    this.playedTurn = false;
+  }
+}
+
+class Card {
+  constructor(value, name) {
+    this.value = value;
+    this.owner = name;
   }
 }
 
@@ -49,12 +57,20 @@ function checkWin(array, max) {
   return false;
 }
 
-
+function checkTurns(array) {
+  var turns = 0;
+  for(var p of array){
+    if(p.playedTurn == true) turns++;
+  }
+  return turns;
+}
 
 
 exports.Player = Player;
+exports.Card = Card;
 exports.checkDuplicate = checkDuplicate;
 exports.checkArrayLoc = checkArrayLoc;
 exports.checkEnteredGame = checkEnteredGame;
 exports.shuffle = shuffle;
 exports.checkWin = checkWin;
+exports.checkTurns = checkTurns;

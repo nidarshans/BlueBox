@@ -8,13 +8,14 @@ var helper = require('./helper.js');
 var decks = require('./decks.js');
 
 const ROOM = '1';
-const PLAYER_LIMIT = 2;
+const PLAYER_LIMIT = 1;
 const MAX_POINTS = 5;
 const CARDS_IN_HAND = 5;
 var players = [];
-var bluecards = decks.dvdeck.blue;
-var whitecards = decks.dvdeck.white;
+var bluecards = decks.custom.dvdeck.blue;
+var whitecards = decks.custom.dvdeck.white;
 var whitefill = [];
+var playedCards = [];
 var bluecount = 0;
 var whitecount = 0;
 
@@ -62,8 +63,7 @@ function onConnect (socket) {
       console.log("Shuffled!")
       console.log(bluecards);
       console.log(whitecards);
-      io.in(ROOM).emit('initialize', bluecards[bluecount]);
-      bluecount++;
+      io.in(ROOM).emit('initialize', bluecards[bluecount++]);
       console.log('Played blue card')
     }
   });
@@ -71,13 +71,27 @@ function onConnect (socket) {
   socket.on('initialized', ()=> {
     console.log('Handing out white cards')
     for(var x  = 0; x < players.length - 1; x++) {
-      for(var y = 0; y < CARDS_IN_HAND; y++) whitefill.push(whitecards[whitecount++]);
-      console.log(whitefill);
+      for(var y = 0; y < CARDS_IN_HAND; y++) whitefill.push(new helper.Card(whitecards[whitecount++], players[x].name));
       io.to(`${players[x].id}`).emit('fillWhite', whitefill);
       whitefill = [];
     }
     console.log('Finished handing out white cards');
+    players = helper.shuffle(players);
+    io.in(ROOM).emit('startgame');
   });
+
+  socket.on('playedTurn', (card)=>{
+    var currentPlayer = helper.checkArrayLoc(socket.id, players);
+    console.log(players[currentPlayer].name + ' played turn');
+    playedCards.push(new helper.Card(card, players[currentPlayer].name));
+    players[currentPlayer].playedTurn = true;
+    if(helper.checkTurns(players) == PLAYER_LIMIT) {
+      for(var p of players) p.playedTurn = false;
+      console.log('Voting begins!');
+      io.in(ROOM).emit('vote', playedCards);
+    }
+  });
+
 
 
 }
