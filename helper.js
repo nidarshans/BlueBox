@@ -11,9 +11,9 @@ class Player {
 }
 
 class Card {
-  constructor(value, name) {
+  constructor(value, player) {
     this.value = value;
-    this.owner = name;
+    this.owner = player;
   }
 }
 
@@ -65,6 +65,12 @@ function checkTurns(array) {
   return turns;
 }
 
+function matchCard(card, array) {
+  for(var c of array) {
+    if(c.value ==  card) return c;
+  }
+}
+
 
 exports.Player = Player;
 exports.Card = Card;
@@ -74,3 +80,4 @@ exports.checkEnteredGame = checkEnteredGame;
 exports.shuffle = shuffle;
 exports.checkWin = checkWin;
 exports.checkTurns = checkTurns;
+exports.matchCard = matchCard;

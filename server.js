@@ -14,10 +14,11 @@ const CARDS_IN_HAND = 5;
 var players = [];
 var bluecards = decks.custom.dvdeck.blue;
 var whitecards = decks.custom.dvdeck.white;
-var whitefill = [];
 var playedCards = [];
 var bluecount = 0;
 var whitecount = 0;
+var totalVotes = 0;
+var fillCardCount = 1;
 
 
 app.use(express.static(__dirname));
@@ -69,10 +70,14 @@ function onConnect (socket) {
   });
 
   socket.on('initialized', ()=> {
+    var whitefill = [];
     console.log('Handing out white cards')
-    for(var x  = 0; x < players.length - 1; x++) {
-      for(var y = 0; y < CARDS_IN_HAND; y++) whitefill.push(new helper.Card(whitecards[whitecount++], players[x].name));
-      io.to(`${players[x].id}`).emit('fillWhite', whitefill);
+    for(var x  = 0; x < players.length; x++) {
+      for(var y = 0; y < CARDS_IN_HAND; y++) {
+        whitefill.push(whitecards[whitecount++]);
+      }
+      console.log(whitefill);
+      io.to(`${players[x].id}`).emit('fillWhite', whitefill, CARDS_IN_HAND);
       whitefill = [];
     }
     console.log('Finished handing out white cards');
@@ -83,13 +88,42 @@ function onConnect (socket) {
   socket.on('playedTurn', (card)=>{
     var currentPlayer = helper.checkArrayLoc(socket.id, players);
     console.log(players[currentPlayer].name + ' played turn');
-    playedCards.push(new helper.Card(card, players[currentPlayer].name));
+    playedCards.push(new helper.Card(card, players[currentPlayer]));
     players[currentPlayer].playedTurn = true;
     if(helper.checkTurns(players) == PLAYER_LIMIT) {
       for(var p of players) p.playedTurn = false;
       console.log('Voting begins!');
+      playedCards = helper.shuffle(playedCards);
       io.in(ROOM).emit('vote', playedCards);
     }
+  });
+
+  socket.on('voted', (card)=>{
+    console.log(card);
+    const c = helper.matchCard(card, playedCards);
+    console.log(c.value);
+    arrayLoc = helper.checkArrayLoc(c.owner.id, players);
+    players[arrayLoc].points++;
+    totalVotes++;
+    if(totalVotes == PLAYER_LIMIT) {
+      console.log('Everyone voted');
+      totalVotes = 0;
+      for(var p of players) {
+        io.to(`${p.id}`).emit('update', players, whitecards[whitecount++], bluecards[bluecount++]);
+      }
+    }
+  });
+
+  socket.on('insertCards', ()=>{
+    var append = "<div class='card' align='center' style='background-color:white; color: black'> <h3 class='title' style='color: black'>User Card</h3><div class='bar'><div class='txt' id='usr" + fillCardCount + "'></div></div></div>"
+    fillCardCount++;
+    io.emit('insertCard', append);
+  });
+
+  socket.on('newRound', ()=>{
+    playedCards = [];
+    fillCardCount = 1;
+    io.in(ROOM).emit('startgame');
   });
 
 
