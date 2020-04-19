@@ -3,6 +3,7 @@ var played = false;
 var voted = false;
 var started =  false;
 var playedCard = '';
+var bool = false;
 
 $('.card').hide();
 $('.slider').hide();
@@ -40,18 +41,21 @@ socket.on('startgame', Game);
 
 function Game() {
   $('.slides').dblclick((e)=>{
+    e.preventDefault();
     if(played != true) {
       played = true;
       playedCard = $('#' + e.target.id).html();
       $('#' + e.target.id).html('.');
       socket.emit('insertCards');
     }
-    socket.on('insertCard', (bool)=>{
-      if(bool != true) socket.emit('playedTurn', playedCard);
-      e.preventDefault();
-      socket.on('vote', (cards, append)=>{
-        for(var a of append) {
-          $('#userspace').append(a);
+    socket.on('insertCard', ()=>{
+      if(bool == false) {
+        socket.emit('playedTurn', playedCard);
+        bool = true;
+      }
+      socket.on('vote', (cards, app, lim)=>{
+        for(var a of app) {
+          if($('#userspace > div').length < lim) $('#userspace').append(a);
         }
         for(var x = 1; x <= cards.length; x++) {
           $('#usr' + x).html(cards[x-1].value);
@@ -77,6 +81,7 @@ function Game() {
               if($('#slide-' + x).html() == '.') $('#slide-' + x).html(w);
               }
               $('#userspace').html('');
+              bool = false;
               socket.emit('newRound');
             });
           });

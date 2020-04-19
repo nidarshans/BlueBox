@@ -54,6 +54,7 @@ client.on('message', message => {
             if(err) throw err;
             message.channel.send('Successfully saved file');
           });
+        }
       }
 
       if(msg.includes('-b')) {
@@ -72,14 +73,45 @@ client.on('message', message => {
           });
         }
       }
-    }
   }
-  if(msg.includes('clr', 3)) {
+
+    if(msg.includes('clr', 3)) {
     if(msg.includes('-w')) wtemp = [];
     if(msg.includes('-b')) btemp = [];
     message.channel.send('Cleared array');
-  }  
-}
+  }
+
+    if(msg.includes('rm', 3)) {
+    if(msg.includes('-w')) {
+      var str = msg.substring(msg.indexOf(':') + 1);
+      if(!msg.includes('--pop')) {
+        for(var s = 0; s < wtemp.length; s++) {
+          message.channel.send(wtemp[s] + ' : was removed');
+          if(wtemp[s] == str) wtemp[s] = 'REMOVED';
+        }
+      }
+      if(msg.includes('--pop')) {
+        message.channel.send('Popped!');
+        wtemp.pop();
+      }
+    }
+
+    if(msg.includes('-b')) {
+      var str = msg.substring(msg.indexOf(':') + 1);
+      if(!msg.includes('--pop')) {
+        for(var s = 0; s < btemp.length; s++) {
+          message.channel.send(btemp[s] + ' : was removed');
+          if(btemp[s] == str) btemp[s] = 'REMOVED';
+        }
+      }
+      if(msg.includes('--pop')) {
+        message.channel.send('Popped!');
+        btemp.pop();
+      }
+    }
+  }
+  
+  }
 });
 
 // Log our bot in using the token from https://discordapp.com/developers/applications/me

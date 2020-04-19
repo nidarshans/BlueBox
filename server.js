@@ -8,7 +8,7 @@ var helper = require('./helper.js');
 var decks = require('./decks/decks.js');
 
 const ROOM = '1';
-const PLAYER_LIMIT = 2;
+const PLAYER_LIMIT = 4;
 const MAX_POINTS = 5;
 const CARDS_IN_HAND = 5;
 var players = [];
@@ -100,7 +100,7 @@ function onConnect (socket) {
       playedCards = helper.shuffle(playedCards);
       console.log(playedCards);
       console.log(playedCards.length);
-      io.in(ROOM).emit('vote', playedCards, toInsert);
+      io.in(ROOM).emit('vote', playedCards, toInsert, PLAYER_LIMIT);
     }
   });
 
@@ -121,12 +121,11 @@ function onConnect (socket) {
   });
 
   socket.on('insertCards', ()=>{
-    var c = helper.checkArrayLoc(socket.id, players);
     var append = "<div class='card' align='center' style='background-color:white; color: black'> <h3 class='title' style='color: black'>User Card</h3><div class='bar'><div class='txt' id='usr" + fillCardCount + "'></div></div></div>"
     toInsert.push(append);
     console.log('Selected = ' + selected++ + '\n' + 'fillCardCount = ' + fillCardCount++);
     if(selected == PLAYER_LIMIT) {
-      io.in(ROOM).emit('insertCard', players[c].playedTurn);
+      io.in(ROOM).emit('insertCard');
       console.log('Everyone selected');
     }
   });
