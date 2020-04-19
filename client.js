@@ -1,6 +1,7 @@
 var socket = io();
 var played = false;
 var voted = false;
+var started =  false;
 var playedCard = '';
 
 $('.card').hide();
@@ -21,7 +22,7 @@ socket.on('set click to enter', ()=> {
   $('#clicktoenter').click((event)=>{
     $('.card').show();
     $('.slider').show();
-    socket.emit('entered2', socket.id);
+    if(started != true) socket.emit('entered2', socket.id);
     event.preventDefault();
   });
 });
@@ -39,22 +40,23 @@ socket.on('startgame', Game);
 
 function Game() {
   $('.slides').dblclick((e)=>{
-    socket.emit('insertCards');
-    socket.on('insertCard', (insert, c)=>{
-      if(played != true) {
-        $('#userspace').append(insert);
-        playedCard = $('#' + e.target.id).html();
-        $('#' + e.target.id).html('.');
-        played = true;
-        socket.emit('playedTurn', playedCard);
-      }
-      else alert('You already played your turn, u gay');
+    if(played != true) {
+      played = true;
+      playedCard = $('#' + e.target.id).html();
+      $('#' + e.target.id).html('.');
+      socket.emit('insertCards');
+    }
+    socket.on('insertCard', (bool)=>{
+      if(bool != true) socket.emit('playedTurn', playedCard);
       e.preventDefault();
-      socket.on('vote', (cards)=> {
-        alert("Time to vote, fools!");
+      socket.on('vote', (cards, append)=>{
+        for(var a of append) {
+          $('#userspace').append(a);
+        }
         for(var x = 1; x <= cards.length; x++) {
           $('#usr' + x).html(cards[x-1].value);
         }
+        cards = [];
         $("[id^='usr']").click((v)=>{
           v.preventDefault();
           if(voted != true) {
@@ -62,17 +64,21 @@ function Game() {
             voted = true;
             socket.emit('voted', $('#' + v.target.id).html());
           }
-          socket.on('update', (p, w, b)=>{
-            $('#' + p.name).html(p.points);
-            for(var x = 1; x <= 5; x++) {
-              if($('#slide-' + x).html() == '.') $('#slide-' + x).html(w);
-            }
-            $('#bluecard').html(b);
-            $('#userspace').empty();
+          socket.on('update', (pp, b)=>{
             played = false;
             voted = false;
             playedCard = '';
-            socket.emit('newRound');
+            $('#bluecard').html(b);
+            for(var p of pp) {
+              $('#' + p.name).html(p.points);
+            }
+            socket.on('updateWhite', (w)=>{
+              for(var x = 1; x <= 5; x++) {
+              if($('#slide-' + x).html() == '.') $('#slide-' + x).html(w);
+              }
+              $('#userspace').html('');
+              socket.emit('newRound');
+            });
           });
         });
       });
