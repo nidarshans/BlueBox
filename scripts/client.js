@@ -7,6 +7,23 @@ var bool = false;
 
 $('.card').hide();
 $('.slider').hide();
+$("#join").hide();
+$('#lst').hide();
+$('#admin').hide();
+
+socket.on('administrator', ()=>{
+  $('#admin').show();
+});
+
+$('#admin').click((e)=>{
+  socket.emit('a');
+});
+
+socket.on('show', ()=>{
+  $('#join').show();
+  $('#lst').show();
+  $('#status').hide();
+});
 
 $('#enter').click((event)=>{
   socket.emit('entered', $('#name').val());
@@ -23,7 +40,10 @@ socket.on('set click to enter', ()=> {
   $('#clicktoenter').click((event)=>{
     $('.card').show();
     $('.slider').show();
-    if(started != true) socket.emit('entered2', socket.id);
+    if(started != true) {
+      socket.emit('entered2', socket.id);
+      started = true;
+    }
     event.preventDefault();
   });
 });
@@ -31,6 +51,7 @@ socket.on('set click to enter', ()=> {
 socket.on('initialize', (blue)=>{
   $('#bluecard').html(blue);
   socket.emit('initialized');
+  $('#join').hide();
 });
 
 socket.on('fillWhite', (cards, hand)=> {
@@ -38,9 +59,18 @@ socket.on('fillWhite', (cards, hand)=> {
 });
 
 socket.on('startgame', Game);
+socket.on('endgame', (array)=>{
+  $('.card').hide();
+  $('.slider').hide();
+  $("#join").hide();
+  $('#lst').hide();
+  $('#status').show();
+  $('#status > h2').empty();
+  for(var a of array) $('#status').append('<h2>' + a.name + ' won the game</h2>');
+});
 
 function Game() {
-  $('.slides').dblclick((e)=>{
+  $('.slides').click((e)=>{
     e.preventDefault();
     if(played != true) {
       played = true;
@@ -48,12 +78,14 @@ function Game() {
       $('#' + e.target.id).html('.');
       socket.emit('insertCards');
     }
-    socket.on('insertCard', ()=>{
+  });
+  socket.on('insertCard', ()=>{
       if(bool == false) {
         socket.emit('playedTurn', playedCard);
         bool = true;
       }
-      socket.on('vote', (cards, app, lim)=>{
+    });
+  socket.on('vote', (cards, app, lim)=>{
         for(var a of app) {
           if($('#userspace > div').length < lim) $('#userspace').append(a);
         }
@@ -73,7 +105,9 @@ function Game() {
               voted = false;
             }
           }
-          socket.on('update', (pp, b)=>{
+      });
+    });
+  socket.on('update', (pp, b)=>{
             played = false;
             voted = false;
             playedCard = '';
@@ -81,7 +115,8 @@ function Game() {
             for(var p of pp) {
               $('#' + p.name).html(p.points);
             }
-            socket.on('updateWhite', (w)=>{
+          });
+  socket.on('updateWhite', (w)=>{
               for(var x = 1; x <= 5; x++) {
               if($('#slide-' + x).html() == '.') $('#slide-' + x).html(w);
               }
@@ -89,9 +124,4 @@ function Game() {
               bool = false;
               socket.emit('newRound');
             });
-          });
-        });
-      });
-    });
-  });
 }

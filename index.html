@@ -14,20 +14,27 @@
     <div>
       <h1>BluBox</h1>
     </div>
+    <button id='admin'>Start</button>
   </header>
 
-  <div>
+  <div id='status'>
+    <h2>Waiting for players ...</h2>
+    <br>
+    <h2 style="color:yellow">IMPORTANT: DO NOT refresh page or you will get disconnected</h2>
+  </div>
+
+  <div id='join'>
     <form align='center'>
       <label>Enter name and click submit to join game</label><br>
       <br>
-      <input type="text" id="name" placeholder="Enter Name"><br>
+      <input type="text" id="name" placeholder="Enter name"><br>
       <br>
       <button id='enter'>Enter</button>
       <br>
     </form>
   </div>
 
-  <div>
+  <div id='lst'>
     <table align='center' id='name-list'>
       <tr>
         <th>Users</th>

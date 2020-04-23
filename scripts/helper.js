@@ -20,21 +20,21 @@ class Card {
 function checkDuplicate(array, name, id) {
   if(array == null) return false;
   for(var n of array) {
-    if(n.name == name || n.id == id) return true;
+    if(n != undefined && (n.name == name || n.id == id)) return true;
   }
   return false;
 }
 
 function checkArrayLoc(id, array) {
   for(var x = 0; x < array.length; x++) {
-    if(id == array[x].id) return x;
+    if(array[x] != undefined && id == array[x].id) return x;
   }
 }
 
 function checkEnteredGame(array) {
   let returnVal = 0;
   for(var p of array) {
-    if(p.enteredGame == true) returnVal++;
+    if(p != undefined && p.enteredGame == true) returnVal++;
   }
   return returnVal;
 }
@@ -52,7 +52,7 @@ function shuffle(deck) {
 
 function checkWin(array, max) {
   for(var p of array) {
-    if(p.points == max) return true;
+    if(p != undefined && p.points == max) return true;
   }
   return false;
 }
@@ -60,7 +60,7 @@ function checkWin(array, max) {
 function checkTurns(array) {
   var turns = 0;
   for(var p of array){
-    if(p.playedTurn == true) turns++;
+    if(p != undefined && p.playedTurn == true) turns++;
   }
   return turns;
 }
