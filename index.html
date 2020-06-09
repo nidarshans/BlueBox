@@ -6,6 +6,7 @@
   <link href='./style.css'  rel='stylesheet'>
   <link href='./card.css'  rel='stylesheet'>
   <link href='./carousel.css'  rel='stylesheet'>
+  <link rel="shortcut icon" href="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -18,9 +19,18 @@
   </header>
 
   <div id='status'>
-    <h2>Waiting for players ...</h2>
+    <h2>Waiting for admin ...</h2>
     <br>
-    <h2 style="color:yellow">IMPORTANT: DO NOT refresh page or you will get disconnected</h2>
+    <h2 style="color:yellow">IMPORTANT: DO NOT refresh page at any point in the game or you will get disconnected</h2>
+    <br>
+    <h2 style='color: blue'>Rules/Info</h2>
+    <ul>
+      <li>Once admin starts game, enter your name. If your name doesn't submit, it's probably a duplicate name. Try something else</li>
+      <li>Once you enter name, click on "click to start game". When everyone clicks that button, the game will start</li>
+      <li>Click once on the card you want to submit. Once everyone submits, voting will begin</li>
+      <li>To vote, click on the TEXT of the card you want to vote for</li>
+      <li>Once everyone votes, the scores will be updated and a new round will start</li>
+    </ul>
   </div>
 
   <div id='join'>
@@ -71,23 +81,23 @@
     <a href="#slide-4">4</a>
     <a href="#slide-5">5</a>
 
-    <div class="slides">
+    <div class="slides owl-carousel" id='car'>
+        <div id="slide-1"></div>
 
-      <div id="slide-1"></div>
+        <div id="slide-2"></div>
 
-      <div id="slide-2"></div>
+        <div id="slide-3"></div>
 
-      <div id="slide-3"></div>
+        <div id="slide-4"></div>
 
-      <div id="slide-4"></div>
-
-      <div id="slide-5"></div>
-
+        <div id="slide-5"></div>
     </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"> </script>
   <script src="/socket.io/socket.io.js"></script>
+  <script type='text/javascript' src='/js/jquery.mousewheel.min.js'></script>
+  <script src="owlcarousel/owl.carousel.min.js"></script>
   <script type='module' src='./client.js'></script>
 </body>
 </html>
