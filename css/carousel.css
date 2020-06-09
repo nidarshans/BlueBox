@@ -1,5 +1,5 @@
 * {
-  box-sizing: border-box;
+
 }
 
 .slider {
@@ -9,31 +9,30 @@
   margin-top: 5%;
   margin-left: auto;
   margin-right: auto;
-  color: black;
+  color: blue;
 }
 
 .slides {
   display: flex;
 
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: y mandatory;
 
 
 
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 
-  /*
+
   scroll-snap-points-x: repeat(300px);
   scroll-snap-type: mandatory;
-  */
 }
 .slides::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
 }
 .slides::-webkit-scrollbar-thumb {
-  background: black;
+  background: #00E4FF;
   border-radius: 10px;
 }
 .slides::-webkit-scrollbar-track {

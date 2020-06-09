@@ -5,6 +5,37 @@ var started =  false;
 var playedCard = '';
 var bool = false;
 
+/*
+var owl = $('#car');
+owl.owlCarousel({
+    loop:true,
+    nav:true,
+    margin:10,
+    responsive:{
+        0:{
+            items:1
+        },
+        600:{
+            items:3
+        },
+        960:{
+            items:5
+        },
+        1200:{
+            items:6
+        }
+    }
+});
+
+owl.on('mousewheel', '.owl-stage', function (e) {
+    if (e.deltaY>0) {
+        owl.trigger('next.owl');
+    } else {
+        owl.trigger('prev.owl');
+    }
+    e.preventDefault();
+});
+*/
 $('.card').hide();
 $('.slider').hide();
 $("#join").hide();
@@ -113,7 +144,7 @@ function Game() {
             playedCard = '';
             $('#bluecard').html(b);
             for(var p of pp) {
-              $('#' + p.name).html(p.points);
+              if(p != undefined) $('#' + p.name).html(p.points);
             }
           });
   socket.on('updateWhite', (w)=>{

@@ -8,12 +8,13 @@ var helper = require('./helper.js');
 var decks = require('./decks/decks.js');
 
 const ROOM = '1';
-const PLAYER_LIMIT = 5;
-const MAX_POINTS = 10;
+const PLAYER_LIMIT = 10;
+const MAX_POINTS = 15;
 const CARDS_IN_HAND = 5;
+const DECK_BLACKLIST = [];
 var players = [];
-var bluecards = decks.official.baseset.blue;
-var whitecards = decks.official.baseset.white;
+var bluecards = [];
+var whitecards = [];
 var playedCards = [];
 var bluecount = 0;
 var whitecount = 0;
@@ -28,14 +29,28 @@ var admin_id;
 var selected_admin = false;
 
 console.log("Shuffling ...");
+
+for(var d in decks.official) {
+  if(decks.official.hasOwnProperty(d)) {
+    bluecards = bluecards.concat(decks['official'][d]['blue']);
+    whitecards = whitecards.concat(decks['official'][d]['white']);
+  }
+}
 bluecards = helper.shuffle(bluecards);
 whitecards = helper.shuffle(whitecards);
-bluecards.splice(13);
-whitecards.splice(60);
-bluecards = bluecards.concat(decks.custom.robotics.blue).concat(decks.official.fantasy.blue);
-whitecards = whitecards.concat(decks.custom.robotics.white).concat(decks.official.fantasy.white);
 bluecards = helper.shuffle(bluecards);
 whitecards = helper.shuffle(whitecards);
+bluecards.splice(10);
+whitecards.splice(50);
+for(var d in decks.custom) {
+  if(decks.custom.hasOwnProperty(d)) {
+    bluecards = bluecards.concat(decks['custom'][d]['blue']);
+    whitecards = whitecards.concat(decks['custom'][d]['white']);
+  }
+}
+bluecards = helper.shuffle(bluecards);
+whitecards = helper.shuffle(whitecards);
+
 console.log(bluecards);
 console.log(whitecards);
 console.log("Shuffled!");
@@ -60,15 +75,17 @@ function onConnect (socket) {
   console.log(socket.id + ' connected');
   helper.test();
   joined++;
-
+  console.log('Total players : ' + joined);
   if(joined == 1 && selected_admin == false) {
     admin_id = socket.id;
     io.to(`${admin_id}`).emit('administrator');
   }
 
   socket.on('disconnect', ()=>{
-    console.log(socket.id + ' disconnected');
+    if(players[helper.checkArrayLoc(socket.id, players)] != undefined) console.log(players[helper.checkArrayLoc(socket.id, players)].name + ' disconnected');
+    else console.log(socket.id + ' disconnected');
     joined--;
+    console.log('Total players : ' + joined);
     if(current_players > 0) {
       current_players--;
       delete players[helper.checkArrayLoc(socket.id, players)];

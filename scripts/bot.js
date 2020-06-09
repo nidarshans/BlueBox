@@ -30,7 +30,17 @@ client.on('message', message => {
     if(msg.includes('help', 3)) {
       message.channel.send("`bb add -<w/b> :<text>`\n`w` for white cards\n`b` for question cards\nEx. `bb add -w :u are gay`");
     }
-    if(msg.includes('add', 3)) {
+    if(msg.includes('bb add -w :')) {
+      wtemp.push(msg.substring(msg.indexOf(':') + 1));
+      message.channel.send('Registered white card');
+      console.log(message.author.username + ' has submitted an white card entry');
+    }
+    if(msg.includes('bb add -b :')) {
+      btemp.push(msg.substring(msg.indexOf(':') + 1));
+      message.channel.send('Registered blue card');
+      console.log(message.author.username + ' has submitted an blue card entry');
+    }
+    /* if(msg.includes('add', 3)) {
       if(msg.includes('-w')) {
         wtemp.push(msg.substring(msg.indexOf(':') + 1));
         message.channel.send('Registered white card');
@@ -41,7 +51,7 @@ client.on('message', message => {
         message.channel.send('Registered blue card');
         console.log(message.author.username + ' has submitted an blue card entry');
       }
-    }
+    } */
     if(message.author.tag == "shane#3517") {
       if(msg.includes('ls', 3)) {
       if(msg.includes('-w')) {
@@ -113,8 +123,8 @@ client.on('message', message => {
     }
   }
 }
-    else message.channel.send("You don't have admin permissions");
-}
+    //else message.channel.send("You don't have admin permissions");
+  }
 });
 
 // Log our bot in using the token from https://discordapp.com/developers/applications/me
